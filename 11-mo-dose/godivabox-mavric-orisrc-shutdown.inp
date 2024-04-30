@@ -1,0 +1,107 @@
+=shell
+cp ${INPDIR}/mavric-origen-src.msm mavric-origen-src.msm
+end
+
+=mavric
+small godiva in a box
+v7.1-28n19g
+
+read parameters
+    ceLibrary="ce_v7.1_endf.xml"
+    neutrons photons
+    fissionMult=0 secondaryMult=2
+    perBatch=1000000  batches=200
+    randomSeed=00300000000001
+end parameters
+
+read composition
+u  1 den=18.74 1 293.0
+     92234 1.0202
+     92235 93.7112
+     92238 5.2686   end
+ss304 2 end
+co-59 2 0 7.9e-5 end
+dry-air 3 end
+end composition
+
+read definitions
+    gridGeometry 100
+        xlinear 20 -50 50
+        ylinear 20 -50 50
+        zlinear 20 -50 50
+    end gridGeometry
+    response 501
+        title="ANSI standard (1991) flux-to-dose-rate factors, neutrons"
+        doseData=9031
+    end response
+    response 502
+        title="ANSI standard (1991) flux-to-dose-rate factors, photons"
+        doseData=9505
+    end response
+    distribution 925
+' https://scale-manual.ornl.gov/COVLIB.html#tab10-2-4
+        title="U-235 fission neutrons, Watt spectrum a=0.988 MeV and b=2.249/MeV"
+        special="wattSpectrum"
+        parameters 0.988 2.249 200 end
+    end distribution
+
+end definitions
+
+read tallies
+    meshtally 1
+        title="Neutron dose [rem/h]]"
+        neutron
+        responseid=501
+        gridGeometryID=100
+        noGroupFluxes
+    end meshtally
+    meshtally 2
+        title="Photon dose [rem/h]"
+        photon
+        responseid=502
+        gridGeometryID=100
+        noGroupFluxes
+    end meshtally
+end tallies
+
+read sources
+    src 1
+        title="mavric-origen-src.msm"
+        meshsourcefile="mavric-origen-src.msm"       
+    end src
+end sources
+
+read importancemap
+    gridgeometryid=100
+    adjointSource 1
+        boundingbox 60 -60 60 -60 60 -60
+        responseids 501 502 end
+    end adjointSource
+    macromaterial
+        mmsubcell=9
+        mmtolerance=0.001
+        mmRTSpeed
+    end macromaterial
+    quadrature=12
+    legendre=5
+    respweighting
+'    xblocks=8
+'    yblocks=8
+end importancemap
+
+read geometry
+global unit 1
+sphere 10  7.35
+' no fuel!
+media 0 1  10
+cuboid 11 6p10
+media 3 1  -10 11
+cuboid 12 6p40
+media 2 1  -11 12
+cuboid   99 6p50
+media 3 1  -12 99
+boundary 99
+end geometry
+
+end data
+end

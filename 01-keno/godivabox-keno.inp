@@ -1,0 +1,69 @@
+=csas6
+small godiva in a box
+ce_v7.1
+
+read parm
+    npg=10000
+    gen=510
+    nsk=10
+    plt=no
+    run=yes
+    htm=no
+    fdn=no
+    pmv=no
+    flx=yes
+    mfx=no
+    pms=no
+    pnu=no
+end parm
+
+read bounds
+    all=vac
+end bounds
+
+read composition
+u  1 den=18.74 1 293.0
+     92234 1.0202
+     92235 93.7112
+     92238 5.2686   end
+ss304 2 end
+co-59 2 0 7.9e-5 end
+dry-air 3 end
+end composition
+
+read definitions
+gridGeometry 100
+xlinear 40 -10 10
+ylinear 40 -10 10
+zlinear 40 -10 10
+end gridGeometry
+read energyBounds DEFAULT
+    title "1 group for everything but fluxes"
+    bounds 20000000.0 1e-05 end
+end energyBounds
+end definitions
+
+read tallies
+        read mesh 3
+            energy=DEFAULT
+            grid=100
+            response=FISSION_SOURCE
+        end mesh
+end tallies
+
+
+read geometry
+global unit 1
+sphere 10  7.35
+media 1 1  10
+cuboid 11 6p10
+media 3 1  -10 11
+cuboid 12 6p40
+media 2 1  -11 12
+cuboid   99 6p50
+media 3 1  -12 99
+boundary 99
+end geometry
+
+end data
+end

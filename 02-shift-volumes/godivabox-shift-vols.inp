@@ -1,0 +1,63 @@
+=csas6-shift parm=check
+small godiva in a box
+ce_v7.1
+
+read volume
+    type=trace
+    nrays=1e6
+end volume
+
+
+read parm
+    npg=5000
+    gen=510
+    nsk=10
+    plt=no
+    run=yes
+    htm=no
+    fdn=no
+    pmv=no
+    flx=yes
+    mfx=no
+    pms=no
+    pnu=no
+end parm
+
+read bounds
+    all=vac
+end bounds
+
+read composition
+u  1 den=18.74 1 293
+     92234 1.0202
+     92235 93.7112
+     92238 5.2686   end
+ss304 22 end
+co-59 22 0 7.9e-5 end
+ss304 23 end
+co-59 23 0 7.9e-5 end
+ss304 24 end
+co-59 24 0 7.9e-5 end
+dry-air 3 end
+end composition
+
+read geometry
+global unit 1
+sphere 10  7.35
+media 1 1  10
+cuboid 11 6p10
+media 3 1  -10 11
+cuboid 12 6p20
+media 22 1  -11 12
+cuboid 13 6p30
+media 23 1  -12 13
+cuboid 14 6p40
+media 24 1  -13 14
+cuboid   99 6p50
+media 3 1  -14 99
+boundary 99
+end geometry
+
+
+end data
+end

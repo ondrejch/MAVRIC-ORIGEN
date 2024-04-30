@@ -1,0 +1,248 @@
+=shell
+cp -r ${INPDIR}/*.f33 .
+end
+
+=origen
+options{
+    digits=6
+}
+bounds {
+    neutron="scale.rev13.xn200g47v7.1"
+    gamma="scale.rev13.xn200g47v7.1"
+'    beta=[100L 1.0e7 1.0e-3]
+}
+case(burn_22) {
+    lib {
+        file="godivabox-triton.mix0022.f33"
+        pos=1
+    }
+    mat{
+        iso=[
+6012 = 3.150793e-04
+6013 = 3.407812e-06
+14028 = 1.570105e-03
+14029 = 7.976252e-05
+14030 = 5.264156e-05
+15031 = 6.946885e-05
+24050 = 7.591782e-04
+24052 = 1.464000e-02
+24053 = 1.660058e-03
+24054 = 4.132236e-04
+25055 = 1.740717e-03
+26054 = 3.421905e-03
+26056 = 5.371659e-02
+26057 = 1.240550e-03
+26058 = 1.650944e-04
+27059 = 7.900000e-05
+28058 = 5.268730e-03
+28060 = 2.029506e-03
+28061 = 8.822120e-05
+28062 = 2.812878e-04
+28064 = 7.163571e-05
+        ]
+        units=ATOMS-PER-BARN-CM
+'
+'                            mixture       total mixture volume (cm**3)           total mixture mass (gm)
+'
+'                                1         1.66323e+03 +/- 2.51871e-02             3.11689e+04 +/- 4.72007e-01
+'                                3         4.94337e+05 +/- 2.85168e-03             5.93204e+02 +/- 3.42202e-06
+'                               22         5.60000e+04                             4.45073e+05
+'                               23         1.52000e+05                             1.20806e+06
+'                               24         2.96000e+05                             2.35253e+06
+'                                         -------------                           -------------
+'                                          1.00000e+06                             4.03742e+06
+'
+        volume=5.60000e+04
+    }
+    time {
+        units=DAYS
+        start=0
+        t=[8L 0.001 30.0]
+    }
+'  $ grep 'Mixture powers' -A 12 godivabox-triton.out
+'  --- Mixture powers for depletion pass no.   0 (MW/MITHM) ---
+'       Time =     0.00 days (   0.000 y), Burnup =    0.000     GWd/MTIHM, Transport k=  1.0019
+'
+'                    Total    Fractional  Mixture      Mixture     Mixture       Mixture
+'         Mixture    Power      Power      Power       Burnup      Thermal Flux  Total Flux
+'          Number (MW/MTIHM)    (---)   (MW/MTIHM)   (GWd/MTIHM)   n/(cm^2*sec)  n/(cm^2*sec)
+'             1      31.649    0.98646     31.649         0.000    1.2653e+08    3.2609e+14
+'             3       0.000    0.00000     N/A           N/A       1.7714e+08    2.7373e+12
+'            22       0.137    0.00427     N/A           N/A       7.8126e+09    6.4008e+13
+'            23       0.192    0.00597     N/A           N/A       6.1060e+09    2.4140e+13
+'            24       0.106    0.00330     N/A           N/A       1.7418e+09    6.5604e+12
+'         Total      32.083    1.00000
+'
+'
+flux=[10R 6.4008e+13]
+    save {
+        file="godivabox-std-origen_22.f71"
+    }
+}
+case(decay_22) {
+    gamma=yes
+    neutron=yes
+'    beta=yes
+    lib {
+        file="end7dec"
+    }
+    time {
+        units=DAYS
+        start=0
+        t=[10L 0.001 30]
+    }
+    save {
+        file="godivabox-std-origen_22.f71"
+    }
+}
+
+case(burn_23) {
+    lib {
+        file="godivabox-triton.mix0023.f33"
+        pos=1
+    }
+    mat{
+        iso=[
+6012 = 3.150793e-04
+6013 = 3.407812e-06
+14028 = 1.570105e-03
+14029 = 7.976252e-05
+14030 = 5.264156e-05
+15031 = 6.946885e-05
+24050 = 7.591782e-04
+24052 = 1.464000e-02
+24053 = 1.660058e-03
+24054 = 4.132236e-04
+25055 = 1.740717e-03
+26054 = 3.421905e-03
+26056 = 5.371659e-02
+26057 = 1.240550e-03
+26058 = 1.650944e-04
+27059 = 7.900000e-05
+28058 = 5.268730e-03
+28060 = 2.029506e-03
+28061 = 8.822120e-05
+28062 = 2.812878e-04
+28064 = 7.163571e-05
+        ]
+        units=ATOMS-PER-BARN-CM
+        volume=1.52000e+05
+    }
+    time {
+        units=DAYS
+        start=0
+        t=[8L 0.001 30.0]
+    }
+'  $ grep 'Mixture powers' -A 12 godivabox-triton.out
+'  --- Mixture powers for depletion pass no.   0 (MW/MITHM) ---
+'       Time =     0.00 days (   0.000 y), Burnup =    0.000     GWd/MTIHM, Transport k=  1.0019
+'
+'                    Total    Fractional  Mixture      Mixture     Mixture       Mixture
+'         Mixture    Power      Power      Power       Burnup      Thermal Flux  Total Flux
+'          Number (MW/MTIHM)    (---)   (MW/MTIHM)   (GWd/MTIHM)   n/(cm^2*sec)  n/(cm^2*sec)
+'             1      31.649    0.98646     31.649         0.000    1.2653e+08    3.2609e+14
+'             3       0.000    0.00000     N/A           N/A       1.7714e+08    2.7373e+12
+'            22       0.137    0.00427     N/A           N/A       7.8126e+09    6.4008e+13
+'            23       0.192    0.00597     N/A           N/A       6.1060e+09    2.4140e+13
+'            24       0.106    0.00330     N/A           N/A       1.7418e+09    6.5604e+12
+'         Total      32.083    1.00000
+'
+'
+flux=[10R 2.4140e+13]
+    save {
+        file="godivabox-std-origen_23.f71"
+    }
+}
+case(decay_23) {
+    gamma=yes
+    neutron=yes
+'    beta=yes
+    lib {
+        file="end7dec"
+    }
+    time {
+        units=DAYS
+        start=0
+        t=[10L 0.001 30]
+    }
+    save {
+        file="godivabox-std-origen_23.f71"
+    }
+}
+
+case(burn_24) {
+    lib {
+        file="godivabox-triton.mix0024.f33"
+        pos=1
+    }
+    mat{
+        iso=[
+6012 = 3.150793e-04
+6013 = 3.407812e-06
+14028 = 1.570105e-03
+14029 = 7.976252e-05
+14030 = 5.264156e-05
+15031 = 6.946885e-05
+24050 = 7.591782e-04
+24052 = 1.464000e-02
+24053 = 1.660058e-03
+24054 = 4.132236e-04
+25055 = 1.740717e-03
+26054 = 3.421905e-03
+26056 = 5.371659e-02
+26057 = 1.240550e-03
+26058 = 1.650944e-04
+27059 = 7.900000e-05
+28058 = 5.268730e-03
+28060 = 2.029506e-03
+28061 = 8.822120e-05
+28062 = 2.812878e-04
+28064 = 7.163571e-05
+        ]
+        units=ATOMS-PER-BARN-CM
+        volume=2.96000e+05
+    }
+    time {
+        units=DAYS
+        start=0
+        t=[8L 0.001 30.0]
+    }
+'  $ grep 'Mixture powers' -A 12 godivabox-triton.out
+'  --- Mixture powers for depletion pass no.   0 (MW/MITHM) ---
+'       Time =     0.00 days (   0.000 y), Burnup =    0.000     GWd/MTIHM, Transport k=  1.0019
+'
+'                    Total    Fractional  Mixture      Mixture     Mixture       Mixture
+'         Mixture    Power      Power      Power       Burnup      Thermal Flux  Total Flux
+'          Number (MW/MTIHM)    (---)   (MW/MTIHM)   (GWd/MTIHM)   n/(cm^2*sec)  n/(cm^2*sec)
+'             1      31.649    0.98646     31.649         0.000    1.2653e+08    3.2609e+14
+'             3       0.000    0.00000     N/A           N/A       1.7714e+08    2.7373e+12
+'            22       0.137    0.00427     N/A           N/A       7.8126e+09    6.4008e+13
+'            23       0.192    0.00597     N/A           N/A       6.1060e+09    2.4140e+13
+'            24       0.106    0.00330     N/A           N/A       1.7418e+09    6.5604e+12
+'         Total      32.083    1.00000
+'
+'
+flux=[10R 6.5604e+12]
+    save {
+        file="godivabox-std-origen_24.f71"
+    }
+}
+case(decay_24) {
+    gamma=yes
+    neutron=yes
+'    beta=yes
+    lib {
+        file="end7dec"
+    }
+    time {
+        units=DAYS
+        start=0
+        t=[10L 0.001 30]
+    }
+    save {
+        file="godivabox-std-origen_24.f71"
+    }
+}
+
+
+end

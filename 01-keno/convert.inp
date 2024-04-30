@@ -1,0 +1,10 @@
+'===================================================================
+' Convert the mesh tally into a mesh source
+'===================================================================
+=mt2msm
+"/opt/scale6.3.1-ondrejch/scale-6.3.1-src/play/godivabox-keno.fission_source.3dmap"
+1
+-1
+1
+"/opt/scale6.3.1-ondrejch/scale-6.3.1-src/play/godivabox-keno.fission_source.msm"
+end
