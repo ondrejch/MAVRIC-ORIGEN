@@ -1,0 +1,169 @@
+=shell
+cp -r ${INPDIR}/*.f71 .
+end
+
+=mavric
+small godiva in a box
+v7.1-28n19g
+
+read parameters
+    ceLibrary="ce_v7.1_endf.xml"
+    photons
+'    fissionMult=0 secondaryMult=2
+    perBatch=1000000  batches=200
+    randomSeed=00300000000001
+end parameters
+
+read composition
+u  1 den=18.74 1 293
+     92234 1.0202
+     92235 93.7112
+     92238 5.2686   end
+ss304 22 end
+co-59 22 0 7.9e-5 end
+ss304 23 end
+co-59 23 0 7.9e-5 end
+ss304 24 end
+co-59 24 0 7.9e-5 end
+dry-air 3 end
+end composition
+
+read definitions
+    gridGeometry 99
+        title='grid for denovo'
+        ylinear 20 -50 50
+        zlinear 20 -50 50
+        xlinear 20 -50 50
+    end gridGeometry
+    gridGeometry 100
+        title='grid for tally'
+        xlinear 5 -50 -45
+        ylinear 20 -50 50
+        zlinear 20 -50 50
+'        xlinear 20 -50 50
+    end gridGeometry
+'    response 501
+'        title="ANSI standard (1991) flux-to-dose-rate factors, neutrons"
+'        doseData=9031
+'    end response
+    response 502
+        title="ANSI standard (1991) flux-to-dose-rate factors, photons"
+        doseData=9505
+    end response
+'    distribution 925
+' https://scale-manual.ornl.gov/COVLIB.html#tab10-2-4
+'        title="U-235 fission neutrons, Watt spectrum a=0.988 MeV and b=2.249/MeV"
+'        special="wattSpectrum"
+'        parameters 0.988 2.249 200 end
+'    end distribution
+
+    distribution 122
+        title='Photons from mixture 22'
+        special="origensBinaryConcentrationFile"
+        filename="godivabox-std-origen_22.f71"
+        parameters 24 5 end
+        runSampleTest
+    end distribution
+
+    distribution 123
+        title='Photons from mixture 23'
+        special="origensBinaryConcentrationFile"
+        filename="godivabox-std-origen_23.f71"
+        parameters 24 5 end
+        runSampleTest
+    end distribution
+
+    distribution 124
+        title='Photons from mixture 24'
+        special="origensBinaryConcentrationFile"
+        filename="godivabox-std-origen_24.f71"
+        parameters 24 5 end
+        runSampleTest
+    end distribution
+
+end definitions
+
+read tallies
+'    meshtally 1
+'        title="Neutron dose [rem/h]]"
+'        neutron
+'        responseid=501
+'        gridGeometryID=100
+'        noGroupFluxes
+'    end meshtally
+    meshtally 2
+        title="Photon dose [rem/h]"
+        photon
+        responseid=502
+        gridGeometryID=100
+        noGroupFluxes
+    end meshtally
+end tallies
+
+read sources
+    src 122
+        title="source mixture 22"
+        photon
+        cuboid 20 -20 20 -20 20 -20
+        mixture=22
+        useNormConst
+        eDistributionID=122
+    end src
+
+    src 123
+        title="source mixture 23"
+        photon
+        cuboid 30 -30 30 -30 30 -30
+        mixture=23
+        useNormConst
+        eDistributionID=123
+    end src
+
+    src 124
+        title="source mixture 24"
+        photon
+        cuboid 40 -40 40 -40 40 -40
+        mixture=24
+        useNormConst
+        eDistributionID=124
+    end src
+end sources
+
+read importancemap
+    gridgeometryid=99
+    adjointSource 1
+        boundingbox -45 -50 50 -50 50 -50
+        responseid=502
+    end adjointSource
+    macromaterial
+        mmsubcell=9
+        mmtolerance=0.001
+        mmRTSpeed
+    end macromaterial
+    quadrature=12
+    legendre=5
+    respweighting
+'    xblocks=8
+'    yblocks=8
+end importancemap
+
+read geometry
+global unit 1
+sphere 10  7.35
+' no fuel 
+media 0 1  10
+cuboid 11 6p10
+media 3 1  -10 11
+cuboid 12 6p20
+media 22 1  -11 12
+cuboid 13 6p30
+media 23 1  -12 13
+cuboid 14 6p40
+media 24 1  -13 14
+cuboid   99 6p50
+media 3 1  -14 99
+boundary 99
+end geometry
+
+end data
+end
